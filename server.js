@@ -36,11 +36,18 @@ app.post("/recomendacao", async (req, res) => {
     res.json({ recomendacao });
 
   } catch (error) {
-    console.error("ERRO:", error);
-    res.status(500).json({
-      erro: error.message || "Erro ao gerar recomendação"
+  console.error("ERRO:", error);
+
+  if (error.message.includes("quota")) {
+    return res.json({
+      recomendacao: "Serviço de IA indisponível no momento. Tente novamente mais tarde."
     });
   }
+
+  res.status(500).json({
+    erro: error.message || "Erro ao gerar recomendação"
+  });
+}
 });
 
 app.listen(3000, () => console.log("Servidor rodando na porta 3000"));
